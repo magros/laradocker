@@ -1,0 +1,38 @@
+version: "3.2"
+services:
+  webapp:
+    image: laradocker
+    container_name: laradocker_webapp
+    build:
+      context: .
+      dockerfile: Dockerfile
+    links:
+      - mysql
+    ports:
+      - 8080:80
+    environment:
+      CONTAINER_ROLE: webapp
+    volumes:
+      - .:/var/www/html
+
+  scheduler:
+    image: laradocker
+    container_name: laradocker_scheduler
+    links:
+      - mysql
+    environment:
+      CONTAINER_ROLE: scheduler
+    volumes:
+      - .:/var/www/html
+
+  mysql:
+    image: mysql:latest
+    ports:
+      - 33006:3306
+    volumes:
+      - /home/marco/mysql/laradocker:/var/lib/mysql
+    environment:
+      MYSQL_DATABASE: laradocker
+      MYSQL_ROOT_PASSWORD: secret
+      MYSQL_USER: root
+      MYSQL_PASSWORD: secret
